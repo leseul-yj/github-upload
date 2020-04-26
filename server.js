@@ -5,7 +5,8 @@ const {
 const path = require('path');
 const app = express();
 const port = 5000;
-app.use(express.static(path.join(__dirname,'static')))
+// path.join方法 将多个路径字段 拼接成一个字符串
+app.use(express.static(path.join(__dirname,'express')))
 app.get('/',(req,res) => {
   res.send('Hello world');
 });
