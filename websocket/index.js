@@ -1,12 +1,13 @@
 let serverMes = document.getElementById("serverMes");
-
+let clientMes = document.getElementById("clientMes");
 function socketConnect(url) {
     // 与服务器建立连接
     let ws = new WebSocket(url);
 
     ws.open = (e) => {
-        console.log('success', e);
+        //console.log('success', e);
         ws.send('发送消息给服务端');
+        clientMes.innerHTML += `<p>${e}</p>`;
     }
 
     ws.onmessage = (e) => {
