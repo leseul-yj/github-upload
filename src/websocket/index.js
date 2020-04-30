@@ -20,19 +20,19 @@ let clientMes = document.getElementById("clientMes");
 // 'ws://121.40.165.18:8800' 是测试地址
 // let wsValue = socketConnect('ws://121.40.165.18:8800');
 
-let socket = io('http://127.0.0.0:3333');
+let socket = io.connect('http://127.0.0.1:5555');
 
-let interval = setTimeInterval(() => {
-    socket.emmit('random', Math.random());
-}, 500);
+socket.on('connect', function () {
+    console.log('连接成功');
+});
+console.log('socket',socket);
 
-socket.on('warn', count => {
-    console.log('warning count : ' + count);
+socket.on('message', count => {
+    console.log('message : ' , count);
+    clientMes.innerHTML += `<p>${count}</p>`;
 });
-// 与客户端对应的接收指定的消息
-socket.on('client message', (data) => {
-    cosnole.log(data); // hi server
-});
+
+
 socket.on('disconnect', () => {
-    clearInterval(interval);
+    //clearInterval(interval);
 });
