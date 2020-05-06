@@ -25,13 +25,16 @@ let socket = io.connect('http://127.0.0.1:5555');
 socket.on('connect', function () {
     console.log('连接成功');
 });
-console.log('socket',socket);
+console.log('socket', socket);
 
-socket.on('message', count => {
-    console.log('message : ' , count);
-    clientMes.innerHTML += `<p>${count}</p>`;
+socket.on('message', result => {
+    result = JSON.parse(result);
+    if (result.status === "false") return;
+    const {
+        data
+    } = result;
+    clientMes.innerHTML += `<p class="wsReceiveMes"><span class="text">${data.message}</span><span class="time">${data.createTime}</span></p>`;
 });
-
 
 socket.on('disconnect', () => {
     //clearInterval(interval);

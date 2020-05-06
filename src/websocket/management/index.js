@@ -15,7 +15,8 @@ btnSubit.addEventListener('click', function () {
         method: "POST",
         // 不添加header 服务器那边收到的是空
         headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
+            //"Content-Type": "application/x-www-form-urlencoded"
+            'content-type': 'application/json'
         },
         body: JSON.stringify(postData),
     }).then((res) => {

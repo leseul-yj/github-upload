@@ -25,7 +25,10 @@ socketIO.on("connection", socket => {
     });
 
     timer = setInterval(() => {
-        socketIO.emit("message", Math.random());
+        let data = {
+            status: false
+        }
+        socketIO.emit("message", data);
     }, 600000);
 
     socket.on('error', (err) => {
@@ -39,7 +42,6 @@ socketIO.on("connection", socket => {
     });
 })
 
-
 app.get('/', (req, res) => {
     res.send('index.html'); //发送一个请求
 })
@@ -47,11 +49,12 @@ app.get('/', (req, res) => {
 app.get('/websocket', (req, res) => {
     res.send('index.html');
 })
+
 app.post('/addNewMes', (req, res) => {
     console.log(req.body)
     socketIO.emit("message", JSON.stringify({
         status: false,
-        message: req.body
+        data: req.body
     }));
 });
 // app.get('/management', function (req, res) {

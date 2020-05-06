@@ -1,14 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>websocket测试</title>
 </head>
+<style>
+    .wsReceiveMes {
+        color: #333;
+        display: flex;
+        width: 500px;
+    }
+
+    .text {
+        font-weight: bold;
+        padding: 20px;
+        width: 300px;
+    }
+
+    .time {
+        width: 200px;
+        padding: 20px;
+    }
+</style>
+
 <body>
     <div id="clientMes"></div>
     <div id="serverMes"></div>
 </body>
 <script src="https://cdn.bootcdn.net/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 <script src="index.js"></script>
+
 </html>
