@@ -2,7 +2,7 @@
 let addMesgText = document.getElementById("addMesg");
 let btnSubit = document.getElementById("btnSubmit");
 
-btnSubit.addEventListener('click', function () {
+btnSubit.addEventListener('click',function() {
     // let postData = {
     //     createTime: moment().format('YYYY-MM-DD HH:mm:ss'),
     //     message: addMesgText.textContent
@@ -11,11 +11,12 @@ btnSubit.addEventListener('click', function () {
         createTime: '2020-04-29 13:56:00',
         message: addMesgText.value
     };
-    fetch("/addNewMes", {
+    fetch("/addNewMes",{
         method: "POST",
         // 不添加header 服务器那边收到的是空
         headers: {
             //"Content-Type": "application/x-www-form-urlencoded"
+            // 就是少了一层{}包裹
             'content-type': 'application/json'
         },
         body: JSON.stringify(postData),
