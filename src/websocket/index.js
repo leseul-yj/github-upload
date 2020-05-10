@@ -1,6 +1,8 @@
 // 请求权限 Notification.requestPermission(CALLBACK)
 // 应用发送通知之前必须要发送通知权限，才能成功进行通知，这个方法支持then方式的链式调用，可以一步调用
-
+Notification.requestPermission((permission) => {
+    alert(permission)
+})
 
 const permission = Notification.permission;
 if(permission == 'granted') {
