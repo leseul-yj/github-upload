@@ -1,16 +1,3 @@
-// 请求权限 Notification.requestPermission(CALLBACK)
-// 应用发送通知之前必须要发送通知权限，才能成功进行通知，这个方法支持then方式的链式调用，可以一步调用
-Notification.requestPermission((permission) => {
-    alert(permission)
-})
-
-const permission = Notification.permission;
-if(permission == 'granted') {
-    alert("grunt");
-} else {
-    alert("denied")
-}
-
 let serverMes = document.getElementById("serverMes");
 let clientMes = document.getElementById("clientMes");
 // function socketConnect(url) {
@@ -33,29 +20,55 @@ let clientMes = document.getElementById("clientMes");
 // 'ws://121.40.165.18:8800' 是测试地址
 // let wsValue = socketConnect('ws://121.40.165.18:8800');
 
-let socket = io.connect('http://127.0.0.1:5555');
+let data = {
+    "type": "STREAM",
+    "data": {
+        "channels": ["baoer-msg-pc-724"],
+        "content": "{\"MessagePcOut\":{\"Id\":\"663853\",\"Title\":\"从宁德时代业绩说明会上获悉，宁德时代对特斯拉供货时间大概是今年下半年。宁德时代董事长曾毓群表示，供货不限于磷酸铁锂或者三元电池，具体供货产品取决于市场需求（证券时报）\",\"Summary\":\"\",\"Content\":\"\",\"Stocks\":null,\"Image\":\"\",\"SubjIds\":[\"10\",\"9\"],\"BkjInfoArr\":[],\"CreatedAt\":\"2020-05-11T17:14:06+08:00\",\"CreatedAtInSec\":1589188446,\"UpdatedAt\":\"2020-05-11T17:14:06+08:00\",\"UpdatedAtInSec\":1589188446,\"ManualUpdatedAt\":1589188446,\"ManualUpdateTime\":\"0001-01-01T00:00:00Z\",\"ExplainInfos\":null,\"ExplainedInfos\":null,\"NeedExplained\":false,\"Impact\":0,\"SubscribeType\":0,\"IsSubscribed\":false,\"SubscribeSubjectId\":\"0\",\"TitlePath\":\"\",\"SummaryPath\":\"\",\"TitleHlts\":null,\"SummaryHlts\":null,\"IsWithdrawn\":false,\"Watermarks\":\"\",\"WhetherHideImpactFace\":false,\"HasSummary\":false},\"Type\":\"create\",\"OldSubjectIds\":null}"
+    },
+    "next_cursor": ""
+}
 
-socket.on('connect',function() {
-    console.log('连接成功');
-});
-console.log('socket',socket);
 
-socket.on('message',result => {
-    result = JSON.parse(result);
-    if(result.status === "false") return;
-    const {
-        data
-    } = result;
-    clientMes.innerHTML += `<p class="wsReceiveMes"><span class="text">${data.message}</span><span class="time">${data.createTime}</span></p>`;
-});
+function createSocket(){
+    let socket = io.connect('http://127.0.0.1:5555');
 
-socket.on('disconnect',() => {
-    //clearInterval(interval);
-});
+    // {"command":"ENTER_CHANNEL","data":{"chann_name":"baoer-msg-pc-724"}}
+    socket.on('connect', function () {
+        console.log('连接成功');
+    });
+    console.log('socket', socket);
+    
+    socket.on('message', result => {
+        result = JSON.parse(result);
+        if (result.status === "false") return;
+        const {
+            data
+        } = result;
+        clientMes.innerHTML += `<p class="wsReceiveMes"><span class="text">${data.message}</span><span class="time">${data.createTime}</span></p>`;
+        const permission = Notification.permission;
+        let notification = undefined;
+        if (permission == 'granted') {
+            notification = new Notification(data.message, {
+                body:data.message,
+                icon:'https://2ue.github.io/images/common/avatar.png',
+                data:{
+                    url: "http://192.168.3.56:9088/index.html"
+                },
+                timestamp: '1000'
+            });
+            notification.onclick = (e)=>{
+                window.open(notification.data.url, '_blank');
+                notification.close();
+            }
+        }
 
-//使用notification通知
-//1。获取用户权限 Notification.permission是一个静态方法，返回一个string，可以根据
-// 返回值判断用户是否授予了通知权限， 返回值有三种
-// default 用户还未被询问是否授权，所以通知不会被显示
-// granted 表示已经询问过用户，并且用户已经授权了显示通知的权限
-// denied 用户已经明确拒绝了显示通知的权限
+    });
+    
+    socket.on('disconnect', () => {
+        //clearInterval(interval);
+    });
+}
+Notification.requestPermission().then(permission=>{
+    createSocket()
+})
